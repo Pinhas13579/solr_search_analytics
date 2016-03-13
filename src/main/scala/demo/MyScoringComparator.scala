@@ -7,7 +7,7 @@ object MyScoringComparator {
 
   def main(args: Array[String]): Unit = {
 
-    //
+    // Values
     val listFeatureForSearch: List[String] = List("attval.pcs_brand", "attval.pcs_actual_color", "ce.ce_v4",
       "attval.pcs_finish", "attval.pcs_category", "attval.pcs_condition", "attval.pcs_material",
       "attval.static_color", "dp.dp_v2", "cb.cb", "solr.score", "attval.pcs_wmt_category",
