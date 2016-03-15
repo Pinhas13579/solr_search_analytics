@@ -19,7 +19,7 @@ abstract class MyJSON {
 
   def getMyJson(): JsValue = myJSONS
 
-  def foreach(itemArr: Array[Array[Double]]): Unit = {
+  def foreachMy(itemArr: Array[Array[Double]]): Unit = {
     itemArr.foreach {
       i => i.foreach {
         j => print(j + "  ")
@@ -79,7 +79,7 @@ abstract class MyJSON {
   }
 
   // for search
-  def toMyString(itemArr: Array[Array[Double]], listFeature: List[String], spl: String): Unit = {
+  def toStringMy(itemArr: Array[Array[Double]], listFeature: List[String], spl: String): Unit = {
     var strPrint: String = ""
     var leng = 5 // length "ii"
     var dd = 5.123456 // previousItemArr - latestItemArr / previousItemArr
@@ -97,7 +97,7 @@ abstract class MyJSON {
   }
 
   // for abcdef
-  def toMyString(previousItemArr: Array[Array[Double]], latestItemArr: Array[Array[Double]], listFeature: List[String], spl: String): Unit = {
+  def toStringMy(previousItemArr: Array[Array[Double]], latestItemArr: Array[Array[Double]], listFeature: List[String], spl: String): Unit = {
     var strPrint: String = ""
     var leng = 5 // length "ii"
     var dd = 5.123456 // previousItemArr - latestItemArr / previousItemArr

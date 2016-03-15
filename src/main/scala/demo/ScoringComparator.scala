@@ -33,7 +33,7 @@ case class SignalPerItem(itemId:Integer, latestItem:Boolean=false,
 class ScoringComparator {
 
   def parseStream1 (json:String):List[SignalPerItem] = {
-    val signal1 = Signal(key="attval.pcs_seating_capacity", score=Some(0.1385290063642662), weight=Some(1))
+    val signal1 = Signal(key="attval_dot_pcs_seating_capacity", score=Some(0.1385290063642662), weight=Some(1))
     val signal2 = Signal(key="attval_dot_pcs_brand", score=Some(0.03272701540731556), weight=Some(1))
     val signal3 = Signal(key="attval_dot_pcs_actual_color", score=Some(0.020568379980465016), weight=Some(1))
     val signal4 = Signal(key="ce_dot_ce_v4", score=Some(0.3474082741499633), weight=Some(2.5))

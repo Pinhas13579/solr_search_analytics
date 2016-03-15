@@ -49,7 +49,7 @@ object MyScoringComparator {
     val searchItemArr = myJSON_search.parseStream(listFeatureForSearch)
 
     // println
-    myJSON_search.toMyString(searchItemArr, listFeatureForSearch, "  |  ")
+    myJSON_search.toStringMy(searchItemArr, listFeatureForSearch, "  |  ")
 
 
 
@@ -57,13 +57,13 @@ object MyScoringComparator {
     // abcdef.json
     println("abcdef.json")
     val previousItemArr = myJSON_abcdef_previousItem.parseStream(listFeatureForAbcdef, "previousItem")
-    // myJSON_abcdef_previousItem.foreach(previousItemArr)
+    // myJSON_abcdef_previousItem.foreachMy(previousItemArr)
 
     val latestItemArr = myJSON_abcdef_latestItem.parseStream(listFeatureForAbcdef, "latestItem")
-    // myJSON_abcdef_latestItem.foreach(latestItemArr)
+    // myJSON_abcdef_latestItem.foreachMy(latestItemArr)
 
     // println
-    myJSON_abcdef_previousItem.toMyString(previousItemArr, latestItemArr, listFeatureForAbcdef, "  |  ")
+    myJSON_abcdef_previousItem.toStringMy(previousItemArr, latestItemArr, listFeatureForAbcdef, "  |  ")
 
   }
 
