@@ -7,6 +7,15 @@ import scala.util.control.Breaks._
   */
 object New3 extends App {
 
+  var as: List[String] = List()
+  as = as ::: List("1")
+  as = as ::: List("2")
+  as = as ::: List("4")
+  as = as ::: List("3")
+
+  as.foreach{
+    q => println(q)
+  }
 
   val a = Array.ofDim[String](2, 2)
   a(0)(0) = "1"
