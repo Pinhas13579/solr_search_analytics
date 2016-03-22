@@ -7,43 +7,61 @@ import scala.io.Source
 /**
   * Created by pppp on 3/13/16.
   */
+class Person(nameF2: String, nameL2: String, email2: Option[Double] = None){
+  var nameF: String = nameF2
+  var nameL: String = nameL2
+  var email: Option[Double] = email2
+
+  def getEmail() = email
+}
+
 object New2 extends App {
 
-  // 1
-  // val url = "http://api.geonames.org/postalCodeLookupJSON?postalcode=6600&country=AT&username=demo"
-  // myJSON.setMyJsonUrl(url)
 
-  // abcdef.json
-  val file2: String = "data/abcdef.json"
-  // val myJSON_abcdef: MyJSON = new MyJSON {}
-  // myJSON_abcdef.setMyJson(file2, "file")
+  /*val x = 5
+  val monad: Option[Int] = Some(x)
+  val result = monad.flatMap(x => Option(Some(x) == monad))
+
+  println(result)
+*/
+
+  var q = Some(10.0)
+  // var q = None
+
+  val p1 = {
+    new Person("a", "aa", q)
+  }
+
+  println(p1.nameF)
+  println(p1.nameL)
+  println(p1.email.getOrElse(None))
 
 
-  //2
-  var myJSONS: JsValue = Json.parse(Source.fromFile(file2).getLines.mkString)
 
-  // 3
-  val jsonItemS = (myJSONS \\ "items")
-  // val tempItemArr = Array.ofDim[Double](jsonItemS.length, listFeature.length)
-  var ii: Int = 0
-  println(jsonItemS.length)
+  val qwe = List(("C", "B", 1), ("C", "D", 1), ("E", "F", 1), ("C", "D", 2), ("G", "H", 1), ("A", "H", 1))
+  var asd = qwe find {e => e._1 == "A"}
+  //drop
+  println(asd)
+  println(qwe.filterNot(_._1 == "G"))
 
-  jsonItemS.foreach {
-    // ii = 0
-    item => println(item)
-      /*
-      for (jj <- 0 to listFeature.length - 1) {
-        try {
-          tempItemArr(ii)(jj) = (item \ "mlr_features" \ listFeature(jj)).toString().toDouble
-        }
-        catch {
-          case e1: NumberFormatException => tempItemArr(ii)(jj) = Double.MaxValue
-          // case e2: ArrayIndexOutOfBoundsException => println("!!! - " + ii + " - " + jj)
-        } // try {
-      } // for (jj <- 0 to listFeatureForAbcdef.length - 1) {
-      ii += 1
-      */
-  } // str_json_abcdef_previousItem.foreach {
+
+
+
+  // We are enthusiastic about newcomers
+  def hello(name: Option[String]) = s"Hello, ${name getOrElse "stranger" toUpperCase}!"
+
+  def a(name: String) = println( hello(Option(name)) )
+
+  def b(name: String) = println( hello(Some(name)) )
+
+
+  a(null)
+
+  b("QQQQQ")
+
+
+
+
 
 
 }
