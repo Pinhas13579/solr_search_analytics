@@ -1,7 +1,5 @@
 package demo
 
-import java.io.Serializable
-
 /**
   * Created by PPPP on 3/17/2016.
   */
@@ -43,12 +41,13 @@ object MyRun {
     // val str = "http://api.geonames.org/postalCodeLookupJSON?postalcode=6600&country=AT&username=demo"
     // val typeJSON: String = "url"
     // FILE - abcdef.json
-    val file: String = "data/abcdef.json"
+    // val file: String = "data/abcdef.json"
+    val file: String = "data/list_products.json"
     val typeJSON: String = "file"
 
 
-    // 2-1 - previousItem
-    // println("previousItem")
+    // 2-1 - previousItem - old score
+    // println("previousItem - old score")
     val myScoringComparatorListPrevious: MyScoringComparator = new MyScoringComparator(file, typeJSON, "previousItem", listFeatureS)
     val myListPrevious: List[MySignalPerItem] = myScoringComparatorListPrevious.getMyList() // Result - previous!!!!!!!!!!!!!
 
@@ -56,15 +55,14 @@ object MyRun {
     myListPrevious.foreach { lp =>
         println(lp.getItemId())
         println(lp.getRerankedFinalScore())
-        lp.getSignals().foreach {
-          ls =>
+        lp.getSignals().foreach { ls =>
             println("              " + ls.getKey() + "              " + ls.getScore() + "              " + ls.getWeight() + "              " + ls.getResult())
         }
     }
     */
 
-    // 2-2 - latestItem
-    // println("latestItem")
+    // 2-2 - latestItem - new score
+    // println("latestItem - new score")
     val myScoringComparatorListLatest: MyScoringComparator = new MyScoringComparator(file, typeJSON, "latestItem", listFeatureS)
     val myListLatest: List[MySignalPerItem] = myScoringComparatorListLatest.getMyList() // Result - latest!!!!!!!!!!!!!
 
@@ -72,56 +70,52 @@ object MyRun {
     myListLatest.foreach { lp =>
         println(lp.getItemId())
         println(lp.getRerankedFinalScore())
-        lp.getSignals().foreach {
-          ls =>
+        lp.getSignals().foreach { ls =>
             println("              " + ls.getKey() + "              " + ls.getScore() + "              " + ls.getWeight() + "              " + ls.getResult())
         }
     }
     */
 
 
-    // 3 - precentage = (last - pr) / last
-    println("precentage = (last - pr) / last")
-    val myListPrecentage: List[MySignalPerItem] = myScoringComparatorListPrevious.myCalcPrecentage(myScoringComparatorListLatest.getMyList())
+    // 3 - precentage = ((old score - new score) / old score) || ((previousItem - latestItem) / previousItem)
+    // println("precentage = ((old score - new score) / old score) || ((previousItem - latestItem) / previousItem)")
+    // val myListPrecentage: List[MySignalPerItem] = myScoringComparatorListLatest.myCalcPrecentage(myScoringComparatorListPrevious.getMyList(), Some("old"))
+    val myListPrecentage: List[MySignalPerItem] = myScoringComparatorListLatest.myCalcPrecentage(myScoringComparatorListPrevious.getMyList(), None)
 
-    //*
+    /* OUTPUT
     myListPrecentage.foreach { lp =>
-        println("ItemId - " + lp.getItemId())
-        println("RerankedFinalScore(previousItem-latestItem) - " + lp.getRerankedFinalScore())
-        lp.getSignals().foreach {
-          ls =>
-            println("              " + ls.getKey() + "              " + ls.getScore() + "              " + ls.getWeight() + "              " + ls.getResult() + "              " + ls.getPrecentage())
-        }
+      println("ItemId - " + lp.getItemId() + "-" + lp.getItemId().getClass)
+      println("ItemId - " + lp.getItemId())
+      println("RerankedFinalScore(new-old) - " + lp.getRerankedFinalScore())
+      lp.getSignals().foreach { ls =>
+        println("              " + ls.getKey() + "              " + ls.getScore() + "              " + ls.getWeight() + "              " + ls.getResult() + "              " + ls.getPrecentage())
+      }
       println()
     }
-    //*/
+    */
 
     // 4-1 - filter = 23146535
     println("Filter - 23146535")
-    // var result1: Serializable = None
-    // result1 = signals1.filter(_.getKey() == lf).head.getResult()
-    var myFilter = myListPrecentage.filter(_.getItemId() == "23146535")
+    var myFilter = myListPrecentage.filter{itemId => itemId.getItemId().contains("23146535")}
     println(myFilter.length)
     myFilter.foreach{ mf =>
       println("ItemId - " + mf.getItemId())
-      println("RerankedFinalScore(previousItem-latestItem) - " + mf.getRerankedFinalScore())
-      mf.getSignals().foreach {
-        ls =>
+      println("RerankedFinalScore(new-old) - " + mf.getRerankedFinalScore())
+      mf.getSignals().foreach { ls =>
           println("              " + ls.getKey() + "              " + ls.getScore() + "              " + ls.getWeight() + "              " + ls.getResult() + "              " + ls.getPrecentage())
       }
       println()
     }
 
-    // 4-2 - filter = 46716836
-    println("Filter - 46716836")
-    myFilter = myListPrecentage.filter(_.getItemId() == 46716836.toString)
+    // 4-2 - filter = 23146535
+    println("Filter - 23146535")
+    myFilter = myListPrecentage.filter{_.getItemId().contains("23146535")}
     println(myFilter.length)
     myFilter.foreach{ mf =>
       println("ItemId - " + mf.getItemId())
-      println("RerankedFinalScore(previousItem-latestItem) - " + mf.getRerankedFinalScore())
-      mf.getSignals().foreach {
-        ls =>
-          println("              " + ls.getKey() + "              " + ls.getScore() + "              " + ls.getWeight() + "              " + ls.getResult() + "              " + ls.getPrecentage())
+      println("RerankedFinalScore(new-old) - " + mf.getRerankedFinalScore())
+      mf.getSignals().foreach { ls =>
+        println("              " + ls.getKey() + "              " + ls.getScore() + "              " + ls.getWeight() + "              " + ls.getResult() + "              " + ls.getPrecentage())
       }
       println()
     }

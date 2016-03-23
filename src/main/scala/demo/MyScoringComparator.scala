@@ -1,7 +1,6 @@
 package demo
 
 import java.io.Serializable
-
 import play.api.libs.json.{Json, JsValue}
 import scala.io.Source
 
@@ -15,37 +14,42 @@ class MyScoringComparator(val file: String, val typeJSON: String, val itemParse:
   def getMyList(): List[MySignalPerItem] = myList
 
 
-  def myCalcPrecentage(myList2: List[MySignalPerItem]): List[MySignalPerItem] = {
+  def myCalcPrecentage(myList2: List[MySignalPerItem], strType: Option[String]): List[MySignalPerItem] = {
+
+    /*
+    if (!strType.isEmpty){ // OR (strType.isDefined)
+      if ( (strType.getOrElse(None).toString.equalsIgnoreCase("latest")) || (strType.getOrElse(None).toString.equalsIgnoreCase("old")) )
+       println("werwere")
+    }
+    */
 
     var myListReturn: List[MySignalPerItem] = Nil // Result!!!!!!!!!!!!!
 
     var myListTemp: List[MySignalPerItem] = myList2
     var myListTemp2: List[MySignalPerItem] = null
 
-    // (last - pr) / last
-    // precentage
+    // precentage = ((old score - new score) / old score) || ((previousItem - latestItem) / previousItem)
+    // latestItem - new score
     var itemId1: String = null
     var rerankedFinalScore1: Serializable = None
     var signals1: List[MySignal] = Nil
     var result1: Serializable = None
-    // latestItem
+    // previousItem - old score
     // var itemId2: String = itemId1
-    var rerankedFinalScor2: Serializable = None
+    var rerankedFinalScore2: Serializable = None
     var signals2: List[MySignal] = Nil
     var result2: Serializable = None
     // temp
     var rerankedFinalScor_temp: Option[String] = None
     var signals_temp: List[MySignal] = Nil
-    //var score_temp: Option[Number] = None
-    //var weight_temp: Option[Number] = None
-    //var result_temp: Option[Number] = None
     var precentage_temp: Option[Number] = None
 
     // myList
     myList.foreach { ml =>
       // null
       signals_temp = Nil
-      rerankedFinalScor2 = None
+      rerankedFinalScore1 = None
+      rerankedFinalScore2 = None
       rerankedFinalScor_temp = None
 
       // first - previousItem
@@ -56,37 +60,37 @@ class MyScoringComparator(val file: String, val typeJSON: String, val itemParse:
       // second - latestItem
       myListTemp2 = myListTemp.filter(_.getItemId() == itemId1)
 
-      // 1 - if found itemId1 in List of latestItem - recentage_temp
+      // 1 - if found itemId1 in List of old - recentage_temp
       if (myListTemp2.length != 0) {
         // result - rerankedFinalScore
-        rerankedFinalScor2 = myListTemp2.head.getRerankedFinalScore()
-        rerankedFinalScor_temp = Some(rerankedFinalScore1 + "-" + rerankedFinalScor2)
+        rerankedFinalScore2 = myListTemp2.head.getRerankedFinalScore()
+        rerankedFinalScor_temp = Some(rerankedFinalScore1 + "-" + rerankedFinalScore2)
 
         // result - signals
         signals2 = myListTemp2.head.getSignals()
 
-        // for - listFeatureS
-        listFeatureS.foreach { lf =>
-          // null
-          //score_temp = None
-          //weight_temp = None
-          //result_temp = None
-
-          // previousItem
+        // for - listFeatureS of List of new - signals1
+        signals1.foreach { lf =>
+          // latestItem - new score
           result1 = None
-          result1 = signals1.filter(_.getKey() == lf).head.getResult()
+          // result1 = signals1.filter(_.getKey() == lf).head.getResult()
+          result1 = lf.getResult()
+          // println(result1)
 
-          // latestItem
+          // previousItem - old score
           result2 = None
-          result2 = signals2.filter(_.getKey() == lf).head.getResult()
+          result2 = signals2.filter(_.getKey() == lf.getKey()).head.getResult()
+          // println(result2)
 
           // precentage_temp
           // 1 - if previousItem and latestItem have
           if (result1 != None && result2 != None)
-            //score_temp = Some(3.4)
-            //weight_temp = Some()
-            //result_temp = Some()
-            precentage_temp = Some( (result2.toString.toDouble - result1.toString.toDouble) / result2.toString.toDouble )
+            // NaN or Double.MaxValue
+            if (result2.toString.toDouble == 0.0 )
+              precentage_temp = Some(Double.MaxValue)
+            else
+              // precentage = ((old score - new score) / old score) || ((previousItem - latestItem) / previousItem)
+              precentage_temp = Some( (result2.toString.toDouble - result1.toString.toDouble) / result2.toString.toDouble )
           // 2 - if previousItem has and latestItem does't have
           else if (result1 != None && result2 == None)
             precentage_temp = None
@@ -99,8 +103,12 @@ class MyScoringComparator(val file: String, val typeJSON: String, val itemParse:
 
           // add signals
           //signals_temp = signals_temp ::: List(new MySignal(lf, score_temp, weight_temp, result_temp, precentage_temp))
-          signals_temp = signals_temp ::: List(new MySignal(lf, None, None, None, precentage_temp))
-        } // listFeatureS.foreach { lf =>
+          signals_temp = signals_temp ::: List(new MySignal(lf.getKey(),
+            if (lf.getScore()==None) None else Some(lf.getScore().toString.toDouble),   // score
+            if (lf.getWeight()==None) None else Some(lf.getWeight().toString.toDouble), // weight
+            if (lf.getResult()==None) None else Some(lf.getResult().toString.toDouble), // result
+            precentage_temp))
+        } // signals1.foreach { lf =>
       } // if (myListTemp1.length != 0) {
         // 2 - if don't find itemId1 in List of latestItem - recentage_temp = None
       else {
