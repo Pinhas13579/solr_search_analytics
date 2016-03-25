@@ -97,7 +97,6 @@ object MyRun {
     // 4-1 - filter = 23146535
     println("Filter - 23146535")
     var myFilter = myListPrecentage.filter{itemId => itemId.getItemId().contains("23146535")}
-    println(myFilter.length)
     myFilter.foreach{ mf =>
       println("ItemId - " + mf.getItemId())
       println("RerankedFinalScore(new-old) - " + mf.getRerankedFinalScore())
@@ -110,7 +109,6 @@ object MyRun {
     // 4-2 - filter = 23146535
     println("Filter - 23146535")
     myFilter = myListPrecentage.filter{_.getItemId().contains("23146535")}
-    println(myFilter.length)
     myFilter.foreach{ mf =>
       println("ItemId - " + mf.getItemId())
       println("RerankedFinalScore(new-old) - " + mf.getRerankedFinalScore())
